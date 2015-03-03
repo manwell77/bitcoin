@@ -9,10 +9,8 @@ import java.net.Proxy.Type;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-
 import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
 
 public class ticker {

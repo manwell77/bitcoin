@@ -1,7 +1,7 @@
 package bitcoin;
 
+import java.net.Inet4Address;
 import java.net.Proxy;
-
 import org.json.simple.JSONObject;
 
 public class db_fill {    
@@ -9,24 +9,19 @@ public class db_fill {
 	public static void main(String[] args) {
     
 		try { 
-//			
-//		  Connection dbconn = null;           
-//		  Statement stmt = null;
-//		  StringBuilder builder = new StringBuilder();
-//		  
-//	      dbconn = DriverManager.getConnection("jdbc:mysql://10.254.0.110:3306/bitcoin?" + "user=manwell77&password=1sjus7m3"); 		
-		
-				  
-		  ticker ticker = new ticker("BTC","https://www.okcoin.com/api/ticker.do?ok=1",Proxy.Type.HTTP,"192.168.201.3",3128);
-		  JSONObject json_ticker = ticker.get_jsonobj();
-		  System.out.println("timestamp: " + json_ticker.get("timestamp"));
-		  System.out.println("currency: " + json_ticker.get("currency"));
-		  System.out.println("buy: " + json_ticker.get("buy"));
-		  System.out.println("sell: " + json_ticker.get("sell"));
-		  System.out.println("low: " + json_ticker.get("low"));
-		  System.out.println("high: " + json_ticker.get("high"));
-		  System.out.println("last: " + json_ticker.get("last"));
-		  System.out.println("volume: " + json_ticker.get("vol"));		  		  		 
+
+//        ticker db connection			
+		  jsontodb jsontodb = new jsontodb(Inet4Address.getLocalHost().getHostAddress(),3306,"bitcoin","manwell77","1sjus7m3");
+		  
+//        btc ticker table insert			
+		  ticker btc_ticker = new ticker("BTC","https://www.okcoin.com/api/ticker.do?ok=1",Proxy.Type.HTTP,"192.168.201.3",3128);
+		  JSONObject json_btc_ticker = btc_ticker.get_jsonobj();		  
+		  jsontodb.insert_ticker(json_btc_ticker);
+		  
+//        ltc ticker table insert		  
+		  ticker ltc_ticker = new ticker("LTC","https://www.okcoin.com/api/ticker.do?symbol=ltc_usd&ok=1",Proxy.Type.HTTP,"192.168.201.3",3128);
+		  JSONObject json_ltc_ticker = ltc_ticker.get_jsonobj();
+		  jsontodb.insert_ticker(json_ltc_ticker);
 		  
 //		  Object obj = parser.parse(builder.toString());
 //		  JSONArray jsonArray = (JSONArray) obj;
