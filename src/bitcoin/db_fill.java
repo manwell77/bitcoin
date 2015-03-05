@@ -24,7 +24,7 @@ public class db_fill {
 		
 		try { 
 //          read ini file
-			BufferedReader br = new BufferedReader(new FileReader("src/bitcoin/bitcoin.cfg"));
+			BufferedReader br = new BufferedReader(new FileReader("bin/bitcoin/bitcoin.cfg"));
 		    String line = br.readLine();   
 //          set startup configuration		    
 	        while (line!=null) {
