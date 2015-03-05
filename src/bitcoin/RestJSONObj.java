@@ -13,8 +13,9 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
 
-public class ticker {
+public class RestJSONObj {
 	
+	private String name = null;
 	private String currency = null;
 	private Proxy proxy = null;
 	private String login = null;
@@ -22,18 +23,22 @@ public class ticker {
 	private HttpURLConnection httpconn = null;
 	
 //  no proxy	
-	public ticker(String curr, String service_url) throws Exception { 
+	public RestJSONObj(String name, String curr, String service_url) throws Exception { 
+		set_name(name);
 		currency = curr;
 		url = new URL(service_url); 
 	}
 //  proxy	
-    public ticker(String curr, String service_url, Type proxy_type, String proxy_address, int proxy_port) throws Exception { 
+    public RestJSONObj(String name, String curr, String service_url, Type proxy_type, String proxy_address, int proxy_port) throws Exception { 
+    	set_name(name);
     	currency = curr;
 		url = new URL(service_url);
 		proxy =  new Proxy(proxy_type, new InetSocketAddress(proxy_address,proxy_port));       				    		    			   	
     }
 //  authenticated proxy    
-    public ticker(String curr, String service_url, Type proxy_type, String proxy_address, int proxy_port, String proxy_user, String proxy_password) throws Exception {            	
+    public RestJSONObj(String name, String curr, String service_url, Type proxy_type, String proxy_address, int proxy_port, String proxy_user, String proxy_password) throws Exception {            	
+    	set_name(name);
+    	currency = curr;
     	url = new URL(service_url);
 		proxy =  new Proxy(proxy_type, new InetSocketAddress(proxy_address,proxy_port));       		
 		String credentials = proxy_user + ":" + proxy_password;
@@ -59,12 +64,12 @@ public class ticker {
     	BufferedReader br = new BufferedReader(new InputStreamReader((httpconn.getInputStream())));
     	while ((output = br.readLine()) != null) { builder.append(output); }
 		JSONParser parser = new JSONParser();		
-		JSONObject jsonObject = (JSONObject) parser.parse(builder.toString());	
-		JSONObject ticker = (JSONObject) jsonObject.get("ticker");
-		ticker.put("currency", currency );
-		ticker.put("timestamp", get_timestamp( ) );
+		JSONObject obj = (JSONObject) parser.parse(builder.toString());	
+		obj.put("name", name );
+		obj.put("currency", currency );
+		obj.put("timestamp", get_timestamp( ) );
 		httpconn.disconnect();
-		return ticker;		   	
+		return obj;		   	
     } 
 //  set timestamp
     private String get_timestamp( ) throws Exception {
@@ -72,4 +77,13 @@ public class ticker {
 	  SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	  return sdf.format(dt);    	
     }
+    
+//  set name
+    private void set_name(String value) {
+    	name = value;
+    }
+    
+    public String get_name( ) {
+    	return name;
+    }    
 }

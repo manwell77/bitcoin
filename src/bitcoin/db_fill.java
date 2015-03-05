@@ -10,18 +10,28 @@ public class db_fill {
     
 		try { 
 
-//        ticker db connection			
+//        db connection			
 		  jsontodb jsontodb = new jsontodb(Inet4Address.getLocalHost().getHostAddress(),3306,"bitcoin","manwell77","1sjus7m3");
 		  
 //        btc ticker table insert			
-		  ticker btc_ticker = new ticker("BTC","https://www.okcoin.com/api/ticker.do?ok=1",Proxy.Type.HTTP,"192.168.201.3",3128);
+		  RestJSONObj btc_ticker = new RestJSONObj("Ticker","BTC","https://www.okcoin.com/api/ticker.do?ok=1",Proxy.Type.HTTP,"192.168.201.3",3128);
 		  JSONObject json_btc_ticker = btc_ticker.get_jsonobj();		  
-		  jsontodb.insert_ticker(json_btc_ticker);
+		  jsontodb.insert(json_btc_ticker);
 		  
 //        ltc ticker table insert		  
-		  ticker ltc_ticker = new ticker("LTC","https://www.okcoin.com/api/ticker.do?symbol=ltc_usd&ok=1",Proxy.Type.HTTP,"192.168.201.3",3128);
+		  RestJSONObj ltc_ticker = new RestJSONObj("Ticker","LTC","https://www.okcoin.com/api/ticker.do?symbol=ltc_usd&ok=1",Proxy.Type.HTTP,"192.168.201.3",3128);
 		  JSONObject json_ltc_ticker = ltc_ticker.get_jsonobj();
-		  jsontodb.insert_ticker(json_ltc_ticker);
+		  jsontodb.insert(json_ltc_ticker);
+		  
+//        btc marketdepth table insert			
+		  RestJSONObj btc_mdepth = new RestJSONObj("MarketDepth","BTC","https://www.okcoin.com/api/depth.do?ok=1",Proxy.Type.HTTP,"192.168.201.3",3128);
+		  JSONObject json_btc_mdepth = btc_mdepth.get_jsonobj();		  
+		  jsontodb.insert(json_btc_mdepth);
+		  
+//        ltc marketdepth table insert			
+		  RestJSONObj ltc_mdepth = new RestJSONObj("MarketDepth","LTC","https://www.okcoin.com/api/depth.do?symbol=ltc_usd&ok=1",Proxy.Type.HTTP,"192.168.201.3",3128);
+		  JSONObject json_ltc_mdepth = ltc_mdepth.get_jsonobj();		  
+		  jsontodb.insert(json_ltc_mdepth);		  
 		  
 //		  Object obj = parser.parse(builder.toString());
 //		  JSONArray jsonArray = (JSONArray) obj;

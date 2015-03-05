@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
 import org.json.simple.JSONObject;
+import org.json.simple.JSONArray;
 
 public class jsontodb {
 	
@@ -22,19 +23,63 @@ public class jsontodb {
     	dbconn.close();    	
     }
     
-    public void insert_ticker(JSONObject json_ticker) throws Exception {
-    	open( );
-    	Statement stmt = dbconn.createStatement();
-    	String ts = (String) json_ticker.get("timestamp");
-    	String curr = (String) json_ticker.get("currency");
-		float buy = (float) Float.parseFloat(new String((String) json_ticker.get("buy").toString()));
-		float sell = (float) Float.parseFloat(new String((String) json_ticker.get("sell").toString()));
-		float low = (float) Float.parseFloat(new String((String) json_ticker.get("low").toString()));
-		float high = (float) Float.parseFloat(new String((String) json_ticker.get("high").toString()));
-		float last = (float) Float.parseFloat(new String((String) json_ticker.get("last").toString()));
-		float vol = (float) Float.parseFloat(new String((String) json_ticker.get("vol").toString()));		 
-        String sql = "INSERT INTO ticker " + "VALUES ('" + ts + "','" + curr + "'," + buy + "," + sell + "," + low + "," + high + "," + last + "," + vol + ")";			  
-        stmt.executeUpdate(sql);  
+    public void insert(JSONObject obj) throws Exception {
+    	
+    	open( );  
+    	
+    	Statement stmt = null;
+    	String sql = null;
+    	String ts = null;
+    	String curr = null;
+    	
+    	switch ((String) obj.get("name")) {
+    		
+	    	case "Ticker":     	
+	    		
+		    	stmt = dbconn.createStatement();
+		    	ts = (String) obj.get("timestamp");
+		    	int date = (int) Integer.parseInt((String) obj.get("date"));
+		    	curr = (String) obj.get("currency");
+		    	JSONObject ticker = (JSONObject) obj.get("ticker");
+				float buy = (float) Float.parseFloat(new String((String) ticker.get("buy").toString()));
+				float sell = (float) Float.parseFloat(new String((String) ticker.get("sell").toString()));
+				float low = (float) Float.parseFloat(new String((String) ticker.get("low").toString()));
+				float high = (float) Float.parseFloat(new String((String) ticker.get("high").toString()));
+				float last = (float) Float.parseFloat(new String((String) ticker.get("last").toString()));
+				float vol = (float) Float.parseFloat(new String((String) ticker.get("vol").toString()));		 
+		        sql = "INSERT INTO ticker " + "VALUES ('" + ts + "','" + curr + "'," + date + "," + buy + "," + sell + "," + low + "," + high + "," + last + "," + vol + ")";			  
+		        stmt.executeUpdate(sql);  
+		        break;
+		        
+	    	case "MarketDepth":    
+	    		
+ 		    	stmt = dbconn.createStatement();
+		    	ts = (String) obj.get("timestamp");
+		    	curr = (String) obj.get("currency");
+		    	JSONArray asks = (JSONArray) obj.get("asks");
+		    	JSONArray bids = (JSONArray) obj.get("bids");
+		    	
+		    	for(int n = 0; n < asks.size(); n++)  {
+		    		int count = n + 1;
+		    		JSONArray ask = (JSONArray) asks.get(n);		    		
+		    		float price = (float) Float.parseFloat(new String((String) ask.get(0).toString()));	
+		    		float quantity = (float) Float.parseFloat(new String((String) ask.get(1).toString()));
+			        sql = "INSERT INTO marketdepth " + "VALUES ('" + ts + "','" + curr + "','asks'," + count + "," + price + "," + quantity + ")";
+			        stmt.executeUpdate(sql);		    		
+		    	}		    	
+		    	
+		    	for(int n = 0; n < bids.size(); n++)  {		    		
+		    		int count = n + 1;
+		    		JSONArray bid = (JSONArray) bids.get(n);		    		
+		    		float price = (float) Float.parseFloat(new String((String) bid.get(0).toString()));	
+		    		float quantity = (float) Float.parseFloat(new String((String) bid.get(1).toString()));
+			        sql = "INSERT INTO marketdepth " + "VALUES ('" + ts + "','" + curr + "','bids'," + count + "," + price + "," + quantity + ")";
+			        stmt.executeUpdate(sql);
+		    	}
+ 
+		        break;
+		        
+    	}
         close( );
     }
 }
