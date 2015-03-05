@@ -3,6 +3,7 @@ package bitcoin;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
+import java.sql.ResultSet;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONArray;
 
@@ -11,19 +12,20 @@ public class jsontodb {
 	private String host = null;
     private Connection dbconn = null;           
 
+//  constructor  
     public jsontodb(String dbhost, int dbport, String db, String dbuser, String dbpassword) throws Exception {
     	host = "jdbc:mysql://" + dbhost + ":" + dbport + "/" + db + "?user=" + dbuser + "&password=" + dbpassword;     	 
     }
-    
+//  open db connection    
     private void open( ) throws Exception {
     	dbconn = DriverManager.getConnection(host);    	
     }
-    
+//  close db connection    
     private void close( ) throws Exception {
     	dbconn.close();    	
     }
-    
-    public void insert(JSONObject obj) throws Exception {
+//  db insert json object    
+    public void jsonobj_insert(JSONObject obj) throws Exception {
     	
     	open( );  
     	
@@ -82,4 +84,40 @@ public class jsontodb {
     	}
         close( );
     }
+//  db insert json array    
+    public void jsonarray_insert(JSONArray arr) throws Exception {
+    	
+    	open( );  
+    	
+    	Statement stmt = null;
+    	String sql = null;
+    	
+    	for(int n = 0; n < arr.size(); n++)  {   
+    		
+    		JSONObject obj = (JSONObject) arr.get(n);	
+    		
+	    	switch ((String) obj.get("name")) {
+	    		
+		    	case "TradeHistory":     	
+		    		
+			    	stmt = dbconn.createStatement();
+			    	long date = (long) obj.get("date_ms");
+			    	long date_ms = (long) obj.get("date_ms");
+			    	long tid = (long) obj.get("tid");
+			    	String curr = (String) obj.get("currency");
+                    String type = (String) obj.get("type");
+					float amount = (float) Float.parseFloat(new String((String) obj.get("amount").toString()));
+					float price = (float) Float.parseFloat(new String((String) obj.get("price").toString()));		 
+			        sql = "SELECT * FROM tradehistory WHERE date=" + date + " AND date_ms=" + date_ms + " AND tid=" + tid;
+			        ResultSet rs = stmt.executeQuery(sql);
+			        if (!rs.first()) {
+			        	sql = "INSERT INTO tradehistory " + "VALUES (" + date + "," + date_ms + "," + tid + ",'" + curr + "','" + type + "'," + amount + "," + price + ")";			        	
+			        	stmt.executeUpdate(sql);
+			        }			          
+			        break;
+	    	}	    		
+    	}    	
+
+        close( );
+    }    
 }
