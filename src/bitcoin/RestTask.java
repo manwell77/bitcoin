@@ -71,16 +71,16 @@ public class RestTask extends TimerTask {
 				  ltc_ticker = new RestJSONObj("Ticker","LTC","https://www.okcoin.com/api/ticker.do?symbol=ltc_usd&ok=1",proxytype,proxyaddress,proxyport);
 				  btc_mdepth = new RestJSONObj("MarketDepth","BTC","https://www.okcoin.com/api/depth.do?ok=1",proxytype,proxyaddress,proxyport);
 				  ltc_mdepth = new RestJSONObj("MarketDepth","LTC","https://www.okcoin.com/api/depth.do?symbol=ltc_usd&ok=1",proxytype,proxyaddress,proxyport);
-				  btc_thistory = new RestJSONArray("TradeHistory","BTC","https://www.okcoin.com/api/trades.do?since=5000&ok=1",proxytype,proxyaddress,proxyport);
-				  ltc_thistory = new RestJSONArray("TradeHistory","LTC","https://www.okcoin.com/api/trades.do?symbol=ltc_usd&since=5000&ok=1",proxytype,proxyaddress,proxyport);				  
+				  btc_thistory = new RestJSONArray("TradeHistory","BTC","https://www.okcoin.com/api/trades.do?ok=1",proxytype,proxyaddress,proxyport);
+				  ltc_thistory = new RestJSONArray("TradeHistory","LTC","https://www.okcoin.com/api/trades.do?symbol=ltc_usd&ok=1",proxytype,proxyaddress,proxyport);				  
 			  }
 			  else {
 				  btc_ticker = new RestJSONObj("Ticker","BTC","https://www.okcoin.com/api/ticker.do?ok=1");
 				  ltc_ticker = new RestJSONObj("Ticker","LTC","https://www.okcoin.com/api/ticker.do?symbol=ltc_usd&ok=1");
 				  btc_mdepth = new RestJSONObj("MarketDepth","BTC","https://www.okcoin.com/api/depth.do?ok=1");
 				  ltc_mdepth = new RestJSONObj("MarketDepth","LTC","https://www.okcoin.com/api/depth.do?symbol=ltc_usd&ok=1");
-				  btc_thistory = new RestJSONArray("TradeHistory","BTC","https://www.okcoin.com/api/trades.do?since=5000&ok=1");
-				  ltc_thistory = new RestJSONArray("TradeHistory","LTC","https://www.okcoin.com/api/trades.do?symbol=ltc_usd&since=5000&ok=1");
+				  btc_thistory = new RestJSONArray("TradeHistory","BTC","https://www.okcoin.com/api/trades.do?ok=1");
+				  ltc_thistory = new RestJSONArray("TradeHistory","LTC","https://www.okcoin.com/api/trades.do?symbol=ltc_usd&ok=1");
 			  }
 			  
 //	          btc ticker table insert						  

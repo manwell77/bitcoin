@@ -1,0 +1,27 @@
+apply plugin: 'java'
+apply plugin: 'application'
+
+sourceSets{
+        main{
+                java{
+                        srcDir 'src/bitcoin'
+                }
+        }
+}
+
+repositories {
+        mavenCentral()
+}
+
+dependencies {
+        compile 'com.googlecode.json-simple:json-simple:1.1.1'
+        compile 'mysql:mysql-connector-java:5.1.34'
+}
+
+mainClassName = 'bitcoin.db_fill'
+
+task copyConf(type: Copy){
+        println "Copy Configuration"
+        from "src/bitcoin/bitcoin.cfg"
+        into "$buildDir"
+}
